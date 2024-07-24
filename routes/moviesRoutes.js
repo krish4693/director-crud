@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const Movie = require('../models/movieSchema');
 const Director = require('../models/directorSchema');
 
@@ -21,7 +22,7 @@ router.post('/movies', async (req, res) => {
 // GET /movies - Retrieve all movies
 router.get('/movies', async (req, res) => {
     try {
-        const movies = await Movie.find().populate('director', 'name');
+        const movies = await Movie.find()
         res.status(200).json(movies);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -31,7 +32,7 @@ router.get('/movies', async (req, res) => {
 // GET /movies/:id - Retrieve a specific movie by ID
 router.get('/movies/:id', async (req, res) => {
     try {
-        const movie = await Movie.findById(req.params.id).populate('director', 'name');
+        const movie = await Movie.findById(req.params.id)
         if (movie) {
             res.status(200).json(movie);
         } else {
@@ -49,7 +50,7 @@ router.put('/movies/:id', async (req, res) => {
             req.params.id,
             req.body,
             { new: true, runValidators: true }
-        ).populate('director', 'name');
+        )
         if (updatedMovie) {
             res.status(200).json(updatedMovie);
         } else {
@@ -77,7 +78,8 @@ router.delete('/movies/:id', async (req, res) => {
 // GET /movies/director/:directorId - Retrieve all movies directed by a specific director
 router.get('/movies/director/:directorId', async (req, res) => {
     try {
-        const movies = await Movie.find({ director: req.params.directorId }).populate('director', 'name');
+        const movies = await Movie.find({ director: req.params.directorId })
+        
         if (movies.length > 0) {
             res.status(200).json(movies);
         } else {

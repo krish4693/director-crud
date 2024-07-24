@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Director = require('../models/directorSchema'); // Ensure correct import
+const {authenticateToken}=require('../middleware/auth')
 
 // POST /directors - Create a new director
-router.post('/directors', async (req, res) => {
+router.post('/directors',authenticateToken, async (req, res) => {
     const { id, name } = req.body;
     const newDirector = new Director({ id, name });
     try {
@@ -15,7 +16,7 @@ router.post('/directors', async (req, res) => {
 });
 
 // GET /directors - Retrieve all directors
-router.get('/directors', async (req, res) => {
+router.get('/directors',authenticateToken, async (req, res) => {
     try {
         const directors = await Director.find();
         res.status(200).json(directors);
@@ -25,7 +26,7 @@ router.get('/directors', async (req, res) => {
 });
 
 // GET /directors/:id - Retrieve a specific director by ID
-router.get('/directors/:id', async (req, res) => {
+router.get('/directors/:id',authenticateToken, async (req, res) => {
     try {
         const director = await Director.findOne({ id: req.params.id });
         if (director) {
@@ -39,7 +40,7 @@ router.get('/directors/:id', async (req, res) => {
 });
 
 // PUT /directors/:id - Update a director by ID
-router.put('/directors/:id', async (req, res) => {
+router.put('/directors/:id',authenticateToken, async (req, res) => {
     try {
         const updatedDirector = await Director.findOneAndUpdate(
             { id: req.params.id },
@@ -57,7 +58,7 @@ router.put('/directors/:id', async (req, res) => {
 });
 
 // DELETE /directors/:id - Delete a director by ID
-router.delete('/directors/:id', async (req, res) => {
+router.delete('/directors/:id',authenticateToken, async (req, res) => {
     try {
         const result = await Director.deleteOne({ id: req.params.id });
         if (result.deletedCount > 0) {
